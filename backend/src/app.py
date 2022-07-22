@@ -1,9 +1,8 @@
-from fastapi import Body, FastAPI, Request, UploadFile
+from fastapi import FastAPI, UploadFile
 from fastapi.middleware import Middleware
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi import HTTPException
 from toascii import gradients
-import traceback
 
 from toascii import ConverterOptions, HtmlColorConverterNim, Image
 
@@ -34,4 +33,7 @@ async def asciify(file: UploadFile) -> str:
     converter = HtmlColorConverterNim(options)
     image = Image(data, converter)
 
-    return image.to_ascii()
+    try:
+        return image.to_ascii()
+    except ValueError:
+        raise HTTPException(status_code=400, detail="invalid/unsupported image uploaded")
