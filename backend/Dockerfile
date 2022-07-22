@@ -20,8 +20,6 @@ RUN poetry install
 WORKDIR /backend
 ADD . /backend
 
-EXPOSE 8000
-
 # run FastAPI app with gunicorn
 WORKDIR /backend/src
 CMD ["gunicorn", "-b", "0.0.0.0:8000", "-k", "uvicorn.workers.UvicornWorker", "app:app", "--workers", "1"]
