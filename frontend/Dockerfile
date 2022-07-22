@@ -8,8 +8,6 @@ ADD package.json .
 ADD yarn.lock .
 RUN yarn install --non-interactive --frozen-lockfile
 
-RUN ls ./node_modules/.bin | grep next && sleep 10
-
 # build
 WORKDIR /frontend
 ADD . /frontend
