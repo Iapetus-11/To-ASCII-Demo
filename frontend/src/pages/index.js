@@ -99,7 +99,7 @@ export default function Home() {
                   <span className="text-white pb-1">Saturation</span>
                   <input
                     type="range"
-                    value="0.5"
+                    defaultValue="0.5"
                     onChange={(e) => setSaturation(e.target.value)}
                     onMouseUp={(e) => updateAscii(fileState, saturation, contrast)}
                     onTouchEnd={(e) => updateAscii(fileState, saturation, contrast)}
@@ -112,7 +112,7 @@ export default function Home() {
                   <span className="text-white pb-1">Contrast</span>
                   <input
                     type="range"
-                    value="0"
+                    defaultValue="0"
                     onChange={(e) => setContrast(e.target.value)}
                     onMouseUp={(e) => updateAscii(fileState, saturation, contrast)}
                     onTouchEnd={(e) => updateAscii(fileState, saturation, contrast)}
