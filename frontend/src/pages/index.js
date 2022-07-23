@@ -72,7 +72,7 @@ export default function Home() {
                 <div dangerouslySetInnerHTML={{__html: ascii}} />
               </div>
               
-              <div className="flex flex-row space-x-4 justify-center">
+              <div className="flex flex-row space-x-4 justify-center pb-5 px-1">
                 <button className="p-3 border-2 rounded border-teal-100 border-opacity-70 hover:bg-teal-900 hover:bg-opacity-10" onClick={() => router.reload(window.location.pathname)}><span className="text-xl text-white">ASCII-fy Another</span></button>
                 
                 <div className="flex flex-col space-y-1 justify-center">
