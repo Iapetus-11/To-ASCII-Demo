@@ -78,11 +78,11 @@ export default function Home() {
                 <div className="flex flex-col space-y-1 justify-center">
                   <div className="flex flex-row space-x-2 justify-between">
                     <span className="text-white pb-1">Saturation</span>
-                    <input type="range" onChange={(e) => setSaturation(e.target.value)} onMouseUp={(e) => updateAscii(fileState, saturation, contrast)} onTouchEnd={(e) => updateAscii(fileState, saturation, contrast)} min="-1" max="1" step="0.05" />
+                    <input type="range" value="0.5" onChange={(e) => setSaturation(e.target.value)} onMouseUp={(e) => updateAscii(fileState, saturation, contrast)} onTouchEnd={(e) => updateAscii(fileState, saturation, contrast)} min="-1" max="1" step="0.05" />
                   </div>
                   <div className="flex flex-row space-x-2 justify-between">
                     <span className="text-white pb-1">Contrast</span>
-                    <input type="range" onChange={(e) => setContrast(e.target.value)} onMouseUp={(e) => updateAscii(fileState, saturation, contrast)} onTouchEnd={(e) => updateAscii(fileState, saturation, contrast)} min="0" max="0.95" step="0.05" />
+                    <input type="range" value="0" onChange={(e) => setContrast(e.target.value)} onMouseUp={(e) => updateAscii(fileState, saturation, contrast)} onTouchEnd={(e) => updateAscii(fileState, saturation, contrast)} min="0" max="0.95" step="0.05" />
                   </div>
                 </div>
               </div>
