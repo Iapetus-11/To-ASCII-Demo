@@ -4,6 +4,8 @@ export default function Document() {
   return (
     <Html>
       <Head>
+        <link rel="shortcut icon" href="/favicon.png" />
+
         {/* Global site tag (gtag.js) - Google Analytics */}
         {/* eslint-disable-next-line @next/next/next-script-for-ga */}
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-HSQ6EH3B6Q"></script>

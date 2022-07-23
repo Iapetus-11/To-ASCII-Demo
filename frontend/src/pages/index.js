@@ -54,7 +54,7 @@ export default function Home() {
           {/* file upload */}
           <div ref={uploadFormRef}>
             <input id="fileInput" type="file" className="hidden" accept="image/*" onChange={onFileChange} />
-            <label htmlFor="fileInput" className="flex flex-col py-5 px-8 border-dashed border-2 rounded border-teal-200 border-opacity-70 space-y-2 hover:bg-teal-900 hover:bg-opacity-10 items-center">
+            <label htmlFor="fileInput" className="flex flex-col pt-5 pb-3 px-8 border-dashed border-2 rounded border-teal-200 border-opacity-70 space-y-2 hover:bg-teal-900 hover:bg-opacity-10 items-center">
               <i className="fa-solid fa-arrow-up-from-bracket text-4xl text-white" />
               <span className="text-white">Select Image To ASCII-fy</span>
             </label>
@@ -82,7 +82,7 @@ export default function Home() {
                   </div>
                   <div className="flex flex-row space-x-2 justify-between">
                     <span className="text-white pb-1">Contrast</span>
-                    <input type="range" onChange={(e) => setContrast(e.target.value)} onMouseUp={(e) => updateAscii(fileState, saturation, contrast)} onTouchEnd={(e) => updateAscii(fileState, saturation, contrast)} min="0" max="1" step="0.05" />
+                    <input type="range" onChange={(e) => setContrast(e.target.value)} onMouseUp={(e) => updateAscii(fileState, saturation, contrast)} onTouchEnd={(e) => updateAscii(fileState, saturation, contrast)} min="0" max="0.95" step="0.05" />
                   </div>
                 </div>
               </div>
