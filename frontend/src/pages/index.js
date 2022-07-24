@@ -133,10 +133,10 @@ export default function Home() {
                 className="font-mono rounded-md text-center"
                 type="text"
                 defaultValue={defaultGradient}
-                onChange={e => setGradient(e.target.value)}
+                onChange={(e) => setGradient(e.target.value)}
                 ref={gradientInputRef}
                 maxLength="100"
-                onKeyDown={e => {
+                onKeyDown={(e) => {
                   if (e.key == "Enter") {
                     if (gradient.length < 1) {
                       setGradient(defaultGradient);
