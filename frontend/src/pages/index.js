@@ -63,7 +63,7 @@ export default function Home() {
 
   function updateFile(e) {
     setFileState(e.target.files[0]);
-    updateAscii(e.target.files[0], saturation, contrast);
+    updateAscii(e.target.files[0], saturation, contrast, gradient);
   }
 
   return (
