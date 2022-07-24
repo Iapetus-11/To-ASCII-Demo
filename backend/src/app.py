@@ -26,11 +26,11 @@ app = FastAPI(
 )
 
 @app.post("/asciify")
-async def asciify(file: UploadFile, saturation: float = Query(..., ge=-1, le=1), contrast: float = Query(..., ge=0, le=1)) -> str:
+async def asciify(file: UploadFile, saturation: float = Query(..., ge=-1, le=1), contrast: float = Query(..., ge=0, le=1), gradient: str = Query(..., min_length=1, max_length=100)) -> str:
     if contrast == 0:
         contrast = None
 
-    options = ConverterOptions(gradient=gradients.LOW, height=32, x_stretch=2.75, saturation=saturation, contrast=contrast)
+    options = ConverterOptions(gradient=gradient, height=32, x_stretch=2.75, saturation=saturation, contrast=contrast)
     data = file.file.read()
     
     converter = HtmlColorConverterNim(options)

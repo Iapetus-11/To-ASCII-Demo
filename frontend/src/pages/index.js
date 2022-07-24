@@ -3,6 +3,9 @@ import Default from "../components/default";
 import http from "http";
 import Router from "next/router";
 import { useRouter } from "next/router";
+import RangeInput from "./home/components/rangeInput";
+
+const defaultGradient = " ¨'³•µðEÆ";
 
 function handleASCIIfyerError(e) {
   console.error(e);
@@ -12,15 +15,19 @@ function handleASCIIfyerError(e) {
 
 export default function Home() {
   const router = useRouter();
+
   const uploadFormRef = useRef(null);
   const asciiViewerRef = useRef(null);
   const loaderRef = useRef(null);
+
   const [ascii, setAscii] = useState("");
-  const [saturation, setSaturation] = useState(0.5);
-  const [contrast, setContrast] = useState(0.0);
   const [fileState, setFileState] = useState(null);
 
-  function updateAscii(file, sat, cont) {
+  const [saturation, setSaturation] = useState(0.5);
+  const [contrast, setContrast] = useState(0.0);
+  const [gradient, setGradient] = useState(defaultGradient);
+
+  function updateAscii(file, sat, cont, grad) {
     asciiViewerRef.current.className = "hidden";
     uploadFormRef.current.className = "hidden";
     loaderRef.current.className = "visible";
@@ -29,7 +36,7 @@ export default function Home() {
 
     data.append("file", file);
 
-    fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/asciify?saturation=${sat}&contrast=${cont}`, {
+    fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/asciify?saturation=${sat}&contrast=${cont}&gradient=${encodeURIComponent(grad)}`, {
       method: "POST",
       body: data,
       agent: new http.Agent({ keepAlive: true, timeout: 300000 }),
@@ -55,7 +62,7 @@ export default function Home() {
 
   return (
     <Default>
-      <div className="flex justify-center items-center h-full">
+      <div className="flex flex-col justify-center items-center h-full py-10 overflow-x-hidden pt-32">
         {/* file upload */}
         <div ref={uploadFormRef}>
           <input
@@ -76,17 +83,17 @@ export default function Home() {
 
         {/* loader */}
         <div ref={loaderRef} className="hidden">
-          <i className="text-white text-6xl fa-solid fa-spinner animate-spin"></i>
+          <i className="text-white text-6xl fa-solid fa-spinner animate-spin" />
         </div>
 
         {/* ascii viewer */}
         <div ref={asciiViewerRef} className="hidden">
-          <div className="flex flex-col space-y-5 items-center h-full portrait:text-[]">
-            <div className="font-mono whitespace-pre text-center bg-black bg-opacity-20 border-2 border-black border-opacity-0 rounded-lg portrait:text-1.95vw landscape:text-1.75vh">
+          <div className="flex flex-col space-y-5 items-center h-full scale-50 md:scale-75 lg:scale-90">
+            <div className="font-mono whitespace-pre text-center bg-black bg-opacity-20 border-2 border-black border-opacity-0 rounded-lg">
               <div dangerouslySetInnerHTML={{ __html: ascii }} />
             </div>
 
-            <div className="flex flex-row space-x-4 justify-center pb-5 px-1">
+            <div className="flex flex-row space-x-4 justify-center">
               <button
                 className="p-3 border-2 rounded border-teal-100 border-opacity-70 hover:bg-teal-900 hover:bg-opacity-10"
                 onClick={() => router.reload(window.location.pathname)}
@@ -95,33 +102,15 @@ export default function Home() {
               </button>
 
               <div className="flex flex-col space-y-1 justify-center">
-                <div className="flex flex-row space-x-2 justify-between">
-                  <span className="text-white pb-1">Saturation</span>
-                  <input
-                    type="range"
-                    defaultValue="0.5"
-                    onChange={(e) => setSaturation(e.target.value)}
-                    onMouseUp={(e) => updateAscii(fileState, saturation, contrast)}
-                    onTouchEnd={(e) => updateAscii(fileState, saturation, contrast)}
-                    min="-1"
-                    max="1"
-                    step="0.05"
-                  />
-                </div>
-                <div className="flex flex-row space-x-2 justify-between">
-                  <span className="text-white pb-1">Contrast</span>
-                  <input
-                    type="range"
-                    defaultValue="0"
-                    onChange={(e) => setContrast(e.target.value)}
-                    onMouseUp={(e) => updateAscii(fileState, saturation, contrast)}
-                    onTouchEnd={(e) => updateAscii(fileState, saturation, contrast)}
-                    min="0"
-                    max="0.95"
-                    step="0.05"
-                  />
-                </div>
+                <RangeInput name="Saturation" defaultValue="0.5" min="-1" max="1" changeHook={setSaturation} endChangeHook={() => updateAscii(fileState, saturation, contrast, gradient)} />
+                <RangeInput name="Contrast" defaultValue="0" min="0" max="0.95" changeHook={setContrast} endChangeHook={() => updateAscii(fileState, saturation, contrast, gradient)} />
               </div>
+            </div>
+
+            <div className="flex flex-row space-x-4 justify-center">
+              <span className="text-white self-center">ASCII Gradient</span>
+              <input className="font-mono rounded-md text-center" type="text" defaultValue={defaultGradient} onChange={e => setGradient(e.target.value)} />
+              <button className="p-1 border-2 rounded border-teal-100 border-opacity-70 hover:bg-teal-900 hover:bg-opacity-10" onClick={() => updateAscii(fileState, saturation, contrast, gradient)}><span className="text-white">UPDATE</span></button>
             </div>
           </div>
         </div>
