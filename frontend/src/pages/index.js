@@ -19,6 +19,7 @@ export default function Home() {
   const uploadFormRef = useRef(null);
   const asciiViewerRef = useRef(null);
   const loaderRef = useRef(null);
+  const gradientInputRef = useRef(null);
 
   const [ascii, setAscii] = useState("");
   const [fileState, setFileState] = useState(null);
@@ -60,14 +61,14 @@ export default function Home() {
       .catch(handleASCIIfyerError);
   }
 
-  function onFileChange(e) {
+  function updateFile(e) {
     setFileState(e.target.files[0]);
     updateAscii(e.target.files[0], saturation, contrast);
   }
 
   return (
     <Default>
-      <div className="flex flex-col justify-center items-center h-full py-10 overflow-x-hidden pt-32">
+      <div className="flex flex-col justify-center items-center h-full py-10 overflow-x-hidden">
         {/* file upload */}
         <div ref={uploadFormRef}>
           <input
@@ -75,7 +76,7 @@ export default function Home() {
             type="file"
             className="hidden"
             accept="image/*"
-            onChange={onFileChange}
+            onChange={updateFile}
           />
           <label
             htmlFor="fileInput"
@@ -93,7 +94,7 @@ export default function Home() {
 
         {/* ascii viewer */}
         <div ref={asciiViewerRef} className="hidden">
-          <div className="flex flex-col space-y-5 items-center h-full scale-50 md:scale-75 lg:scale-90">
+          <div className="flex flex-col space-y-5 items-center h-full scale-50 md:scale-75 lg:scale-90 pt-32">
             <div className="font-mono whitespace-pre text-center bg-black bg-opacity-20 border-2 border-black border-opacity-0 rounded-lg">
               <div dangerouslySetInnerHTML={{ __html: ascii }} />
             </div>
@@ -132,11 +133,30 @@ export default function Home() {
                 className="font-mono rounded-md text-center"
                 type="text"
                 defaultValue={defaultGradient}
-                onChange={(e) => setGradient(e.target.value)}
+                onChange={e => setGradient(e.target.value)}
+                ref={gradientInputRef}
+                maxLength="100"
+                onKeyDown={e => {
+                  if (e.key == "Enter") {
+                    if (gradient.length < 1) {
+                      setGradient(defaultGradient);
+                      gradientInputRef.current.value = defaultGradient;
+                    } else {
+                      updateAscii(fileState, saturation, contrast, gradient);
+                    }
+                  }
+                }}
               />
               <button
                 className="p-1 border-2 rounded border-teal-100 border-opacity-70 hover:bg-teal-900 hover:bg-opacity-10"
-                onClick={() => updateAscii(fileState, saturation, contrast, gradient)}
+                onClick={() => {
+                  if (gradient.length < 1) {
+                    setGradient(defaultGradient);
+                    gradientInputRef.current.value = defaultGradient;
+                  } else {
+                    updateAscii(fileState, saturation, contrast, gradient);
+                  }
+                }}
               >
                 <span className="text-white">UPDATE</span>
               </button>
