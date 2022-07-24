@@ -36,11 +36,16 @@ export default function Home() {
 
     data.append("file", file);
 
-    fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/asciify?saturation=${sat}&contrast=${cont}&gradient=${encodeURIComponent(grad)}`, {
-      method: "POST",
-      body: data,
-      agent: new http.Agent({ keepAlive: true, timeout: 300000 }),
-    })
+    fetch(
+      `${
+        process.env.NEXT_PUBLIC_BASE_URL
+      }/asciify?saturation=${sat}&contrast=${cont}&gradient=${encodeURIComponent(grad)}`,
+      {
+        method: "POST",
+        body: data,
+        agent: new http.Agent({ keepAlive: true, timeout: 300000 }),
+      }
+    )
       .then((res) => {
         res
           .json()
@@ -102,15 +107,39 @@ export default function Home() {
               </button>
 
               <div className="flex flex-col space-y-1 justify-center">
-                <RangeInput name="Saturation" defaultValue="0.5" min="-1" max="1" changeHook={setSaturation} endChangeHook={() => updateAscii(fileState, saturation, contrast, gradient)} />
-                <RangeInput name="Contrast" defaultValue="0" min="0" max="0.95" changeHook={setContrast} endChangeHook={() => updateAscii(fileState, saturation, contrast, gradient)} />
+                <RangeInput
+                  name="Saturation"
+                  defaultValue="0.5"
+                  min="-1"
+                  max="1"
+                  changeHook={setSaturation}
+                  endChangeHook={() => updateAscii(fileState, saturation, contrast, gradient)}
+                />
+                <RangeInput
+                  name="Contrast"
+                  defaultValue="0"
+                  min="0"
+                  max="0.95"
+                  changeHook={setContrast}
+                  endChangeHook={() => updateAscii(fileState, saturation, contrast, gradient)}
+                />
               </div>
             </div>
 
             <div className="flex flex-row space-x-4 justify-center">
               <span className="text-white self-center">ASCII Gradient</span>
-              <input className="font-mono rounded-md text-center" type="text" defaultValue={defaultGradient} onChange={e => setGradient(e.target.value)} />
-              <button className="p-1 border-2 rounded border-teal-100 border-opacity-70 hover:bg-teal-900 hover:bg-opacity-10" onClick={() => updateAscii(fileState, saturation, contrast, gradient)}><span className="text-white">UPDATE</span></button>
+              <input
+                className="font-mono rounded-md text-center"
+                type="text"
+                defaultValue={defaultGradient}
+                onChange={(e) => setGradient(e.target.value)}
+              />
+              <button
+                className="p-1 border-2 rounded border-teal-100 border-opacity-70 hover:bg-teal-900 hover:bg-opacity-10"
+                onClick={() => updateAscii(fileState, saturation, contrast, gradient)}
+              >
+                <span className="text-white">UPDATE</span>
+              </button>
             </div>
           </div>
         </div>
