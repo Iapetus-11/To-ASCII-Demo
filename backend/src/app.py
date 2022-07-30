@@ -1,12 +1,8 @@
-from fastapi import FastAPI, UploadFile
+from config import load_config
+from fastapi import FastAPI, HTTPException, Query, UploadFile
 from fastapi.middleware import Middleware
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi import HTTPException, Query
-from toascii import gradients
-
-from toascii import ConverterOptions, HtmlColorConverterNim, Image
-
-from config import load_config
+from toascii import ConverterOptions, HtmlColorConverterNim, Image, gradients
 
 CONFIG = load_config()
 
@@ -25,14 +21,22 @@ app = FastAPI(
     ],
 )
 
+
 @app.post("/asciify")
-async def asciify(file: UploadFile, saturation: float = Query(..., ge=-1, le=1), contrast: float = Query(..., ge=0, le=1), gradient: str = Query(..., min_length=1, max_length=100)) -> str:
+async def asciify(
+    file: UploadFile,
+    saturation: float = Query(..., ge=-1, le=1),
+    contrast: float = Query(..., ge=0, le=1),
+    gradient: str = Query(..., min_length=1, max_length=100),
+) -> str:
     if contrast == 0:
         contrast = None
 
-    options = ConverterOptions(gradient=gradient, height=32, x_stretch=2.75, saturation=saturation, contrast=contrast)
+    options = ConverterOptions(
+        gradient=gradient, height=32, x_stretch=2.75, saturation=saturation, contrast=contrast
+    )
     data = file.file.read()
-    
+
     converter = HtmlColorConverterNim(options)
     image = Image(data, converter)
 
