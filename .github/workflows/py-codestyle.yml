@@ -18,7 +18,7 @@ jobs:
 
       - name: autoblack_fix
         if: steps.black-check.outcome != 'success' && github.event_name != 'pull_request'
-        run: black --config pyproject.toml .
+        run: black --config backend/pyproject.toml .
       
       - name: autoblack_mark
         if: steps.black-check.outcome != 'success' && github.event_name == 'pull_request'
