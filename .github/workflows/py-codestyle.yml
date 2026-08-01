@@ -4,17 +4,21 @@ on: [push, pull_request]
 jobs:
   autocodestyle:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
 
       - run: pip install black isort
 
       - name: autoblack_check
         id: black-check
         continue-on-error: true
-        run: black --diff --check --config pyproject.toml . 1>.black_diff
+        run: black --diff --check --config backend/pyproject.toml . 1>.black_diff
 
       - name: autoblack_fix
         if: steps.black-check.outcome != 'success' && github.event_name != 'pull_request'
