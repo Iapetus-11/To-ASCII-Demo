@@ -38,9 +38,7 @@ export default function Home() {
     data.append("file", file);
 
     fetch(
-      `${
-        process.env.NEXT_PUBLIC_BASE_URL
-      }/asciify?saturation=${sat}&contrast=${cont}&gradient=${encodeURIComponent(grad)}`,
+      `/api/asciify?saturation=${sat}&contrast=${cont}&gradient=${encodeURIComponent(grad)}`,
       {
         method: "POST",
         body: data,
