@@ -45,7 +45,7 @@ export default function Home() {
         method: "POST",
         body: data,
         agent: new http.Agent({ keepAlive: true, timeout: 300000 }),
-      }
+      },
     )
       .then((res) => {
         res
