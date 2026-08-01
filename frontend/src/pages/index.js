@@ -37,14 +37,11 @@ export default function Home() {
 
     data.append("file", file);
 
-    fetch(
-      `/api/asciify?saturation=${sat}&contrast=${cont}&gradient=${encodeURIComponent(grad)}`,
-      {
-        method: "POST",
-        body: data,
-        agent: new http.Agent({ keepAlive: true, timeout: 300000 }),
-      },
-    )
+    fetch(`/api/asciify?saturation=${sat}&contrast=${cont}&gradient=${encodeURIComponent(grad)}`, {
+      method: "POST",
+      body: data,
+      agent: new http.Agent({ keepAlive: true, timeout: 300000 }),
+    })
       .then((res) => {
         res
           .json()
