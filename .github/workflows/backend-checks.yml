@@ -1,0 +1,50 @@
+name: "Backend: Checks"
+
+on:
+  push:
+    paths:
+      - "backend/**"
+      - ".github/workflows/backend-checks.yml"
+  pull_request:
+    paths:
+      - "backend/**"
+      - ".github/workflows/backend-checks.yml"
+
+defaults:
+  run:
+    working-directory: ./backend
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install Poetry
+        run: python -m pip install poetry
+
+      - name: Configure Poetry
+        run: poetry config virtualenvs.in-project true
+
+      - name: Load cached venv
+        uses: actions/cache@v5
+        with:
+          path: backend/.venv
+          key: venv-${{ runner.os }}-${{ hashFiles('backend/poetry.lock') }}-${{ hashFiles('backend/pyproject.toml') }}
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Run Ruff
+        run: |
+          poetry run ruff check .
+          poetry run ruff format . --check

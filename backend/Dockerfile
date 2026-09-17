@@ -1,25 +1,25 @@
-FROM python:3.8
+FROM python:3.13-slim-bookworm
 
-# install stuff for opencv and the nim compiler
-RUN apt-get update && apt-get install libglu1-mesa libxi-dev libxmu-dev libglu1-mesa-dev nim -y
+ENV POETRY_VIRTUALENVS_CREATE=false \
+    POETRY_NO_INTERACTION=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
-# install gunicorn
-RUN python -m pip install gunicorn
+RUN apt-get update \
+    && apt-get install --no-install-recommends -y gcc git libc6-dev libgl1 libglib2.0-0 nim \
+    && rm -rf /var/lib/apt/lists/*
 
-# setup poetry
-ENV POETRY_VIRTUALENVS_CREATE=false
-ENV POETRY_NO_INTERACTION=1
-RUN python -m pip install poetry
+RUN python -m pip install --no-cache-dir poetry
 
-# install dependencies
-ADD pyproject.toml .
-ADD poetry.lock .
-RUN poetry install
-
-# copy over rest of files
 WORKDIR /backend
-ADD . /backend
+COPY pyproject.toml poetry.lock ./
+RUN poetry install --only main --no-root
+RUN python -c "from toascii import ConverterOptions, HtmlColorConverterNim; HtmlColorConverterNim(ConverterOptions(gradient=' .'))"
 
-# run FastAPI app with gunicorn
+COPY . .
+RUN useradd --create-home --uid 10001 appuser && chown -R appuser:appuser /backend
+USER appuser
+
 WORKDIR /backend/src
-CMD ["gunicorn", "-b", "0.0.0.0:8000", "-k", "uvicorn.workers.UvicornWorker", "app:app", "--workers", "1"]
+EXPOSE 8000
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1", "--timeout-keep-alive", "5"]

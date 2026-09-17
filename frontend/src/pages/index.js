@@ -1,11 +1,11 @@
 import { useRef, useState } from "react";
 import Default from "../components/default";
-import http from "http";
 import Router from "next/router";
 import { useRouter } from "next/router";
 import RangeInput from "./home/components/rangeInput";
 
 const defaultGradient = " ¨'³•µðEÆ";
+const maxUploadBytes = 20 * 1024 * 1024;
 
 function handleASCIIfyerError(e) {
   console.error(e);
@@ -40,25 +40,28 @@ export default function Home() {
     fetch(`/api/asciify?saturation=${sat}&contrast=${cont}&gradient=${encodeURIComponent(grad)}`, {
       method: "POST",
       body: data,
-      agent: new http.Agent({ keepAlive: true, timeout: 300000 }),
     })
-      .then((res) => {
-        res
-          .json()
-          .then((data) => {
-            setAscii(new DOMParser().parseFromString(data, "text/html").body.children[0].innerHTML);
+      .then(async (res) => {
+        if (!res.ok) throw new Error(`ASCII conversion failed with status ${res.status}`);
 
-            loaderRef.current.className = "hidden";
-            asciiViewerRef.current.className = "visible";
-          })
-          .catch(handleASCIIfyerError);
+        const html = await res.json();
+        setAscii(new DOMParser().parseFromString(html, "text/html").body.children[0].innerHTML);
+        loaderRef.current.className = "hidden";
+        asciiViewerRef.current.className = "visible";
       })
       .catch(handleASCIIfyerError);
   }
 
   function updateFile(e) {
-    setFileState(e.target.files[0]);
-    updateAscii(e.target.files[0], saturation, contrast, gradient);
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/") || file.size > maxUploadBytes) {
+      handleASCIIfyerError(new Error("Select an image no larger than 20 MiB"));
+      return;
+    }
+
+    setFileState(file);
+    updateAscii(file, saturation, contrast, gradient);
   }
 
   return (
@@ -77,14 +80,24 @@ export default function Home() {
             htmlFor="fileInput"
             className="flex flex-col pt-5 pb-3 px-8 border-dashed border-2 rounded border-teal-200 border-opacity-70 space-y-2 hover:bg-teal-900 hover:bg-opacity-10 items-center"
           >
-            <i className="fa-solid fa-arrow-up-from-bracket text-4xl text-white" />
+            <svg
+              aria-hidden="true"
+              className="h-10 w-10 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 16V4m0 0L8 8m4-4 4 4" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 15v4h14v-4" />
+            </svg>
             <span className="text-white">Select Image To ASCII-fy</span>
           </label>
         </div>
 
         {/* loader */}
         <div ref={loaderRef} className="hidden">
-          <i className="text-white text-6xl fa-solid fa-spinner animate-spin" />
+          <div className="h-14 w-14 animate-spin rounded-full border-4 border-white border-t-transparent" />
         </div>
 
         {/* ascii viewer */}
