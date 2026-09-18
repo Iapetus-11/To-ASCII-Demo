@@ -1,0 +1,35 @@
+name: "Frontend: Checks"
+
+on:
+  push:
+    paths:
+      - "frontend/**"
+      - "README.md"
+      - ".github/workflows/frontend-checks.yml"
+  pull_request:
+    paths:
+      - "frontend/**"
+      - "README.md"
+      - ".github/workflows/frontend-checks.yml"
+
+defaults:
+  run:
+    working-directory: ./frontend
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Node 24
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Check formatting
+        run: npx prettier --check "**/*.{js,mjs}" "../README.md" --print-width 100

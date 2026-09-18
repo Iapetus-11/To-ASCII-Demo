@@ -1,5 +1,4 @@
 import Head from "next/head";
-import Script from "next/script";
 
 export default function Default({ children, title, description }) {
   title = title || "To-ASCII Demo";
@@ -28,9 +27,6 @@ export default function Default({ children, title, description }) {
         <meta name="twitter:url" content="https://ascii.iapetus11.me/" />
         <meta name="twitter:image" content="https://ascii.iapetus11.me/static/images/favicon.png" />
       </Head>
-
-      {/* font awesome */}
-      <Script src="https://kit.fontawesome.com/8b5bae0343.js" crossOrigin="anonymous" />
 
       {children}
     </main>

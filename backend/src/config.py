@@ -1,7 +1,7 @@
 from typing import Any, Dict, List
 
 import dotenv
-from pydantic import BaseModel, Field, Json
+from pydantic import BaseModel, Json
 
 
 class AppConfig(BaseModel):
